@@ -1,6 +1,7 @@
 package com.example.xujia.fishweather;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -85,6 +86,20 @@ public class ChooseAreaFragment extends Fragment {
                 } else if (currentLevel == LEVEL_CITY){
                     selectedCity = cityList.get(position);
                     queryCounty();
+                } else if (currentLevel == LEVEL_COUNTY){
+                    String weatherId = countyList.get(position).getWeatherId();
+                    if (getActivity() instanceof MainActivity){
+                        Intent intent = new Intent(getActivity(),WeatherActivity.class);
+                        intent.putExtra("weather_id",weatherId);
+                        startActivity(intent);
+                        getActivity().finish();
+                    } else if (getActivity() instanceof WeatherActivity){
+                        WeatherActivity weatherActivity = (WeatherActivity) getActivity();
+                        weatherActivity.drawerLayout.closeDrawers();
+                        weatherActivity.refresh.setRefreshing(true);
+                        weatherActivity.requestWeather(weatherId);
+                        weatherActivity.currentWeatherID = weatherId;
+                    }
                 }
             }
         });
@@ -117,7 +132,7 @@ public class ChooseAreaFragment extends Fragment {
             listView.setSelection(0);
             currentLevel = LEVEL_COUNTY;
         } else {
-            String url = "http://guolin.tech/api/china/" + selectedProvince.getProvinceCode() + "/" + selectedCity.getCityCode();
+            String url = Utility.URL + "china/" + selectedProvince.getProvinceCode() + "/" + selectedCity.getCityCode();
             Log.d(TAG,"queryCounty:"+url);
             queryFromService(url, LEVEL_COUNTY);
         }
@@ -138,7 +153,7 @@ public class ChooseAreaFragment extends Fragment {
             listView.setSelection(0);
             currentLevel = LEVEL_CITY;
         } else {
-            String url = "http://guolin.tech/api/china/" + selectedProvince.getProvinceCode();
+            String url = Utility.URL + "china/" + selectedProvince.getProvinceCode();
             Log.d(TAG,"queryCity:"+url);
             queryFromService(url,LEVEL_CITY);
         }
@@ -161,7 +176,7 @@ public class ChooseAreaFragment extends Fragment {
             currentLevel = LEVEL_PROVINCE;
         } else {
             //从网络中获取中国所有省市的数据
-            String url = "http://guolin.tech/api/china/";
+            String url = Utility.URL + "china/";
             Log.d(TAG,"queryProvince:"+url);
             queryFromService(url,LEVEL_PROVINCE);
         }

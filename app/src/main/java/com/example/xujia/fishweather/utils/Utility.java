@@ -7,6 +7,9 @@ import com.example.xujia.fishweather.ChooseAreaFragment;
 import com.example.xujia.fishweather.db.City;
 import com.example.xujia.fishweather.db.County;
 import com.example.xujia.fishweather.db.Province;
+import com.example.xujia.fishweather.gson.Weather;
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,6 +20,20 @@ import org.json.JSONObject;
  */
 
 public class Utility  {
+    /**
+     * KEY:和风天气的API
+     */
+    public static final String KEY = "bc0418b57b2d4918819d3974ac1285d9";
+
+    /**
+     * 获取天气信息的网址
+     */
+    public static final String URL = "http://guolin.tech/api/";
+
+    /**
+     * 获取天气信息的网址
+     */
+    public static final String PIC_URL = "http://guolin.tech/api/bing_pic";
 
     /**
      * 解析跟处理服务器返回的province数据
@@ -91,5 +108,18 @@ public class Utility  {
             }
         }
         return false;
+    }
+
+    public static Weather handleWeatherResponse(String url){
+        try {
+            JSONObject object = new JSONObject(url);
+            JSONArray jsonArray = object.getJSONArray("HeWeather");
+            String weatherContent = jsonArray.get(0).toString();
+            Weather weather = new Gson().fromJson(weatherContent,Weather.class);
+            return weather;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
