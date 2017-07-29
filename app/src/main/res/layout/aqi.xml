@@ -2,15 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
-    android:background="#8000">
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginTop="10dp"
+    android:background="#C000">
 
     <TextView
         android:layout_margin="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="18sp"
-        android:textColor="#fff"
+        android:textColor="@color/colorText"
         android:text="空气质量"/>
 
     <LinearLayout
@@ -26,9 +28,9 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textColor="#fff"
+            android:textColor="@color/colorText"
             android:textSize="44sp"
-            android:hint="N/A"/>
+            android:text="N/A"/>
 
         <TextView
             android:id="@+id/aqi_pm25"
@@ -36,8 +38,8 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textColor="#fff"
-            android:hint="N/A"
+            android:textColor="@color/colorText"
+            android:text="N/A"
             android:textSize="44sp"/>
 
     </LinearLayout>
@@ -52,7 +54,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textColor="#fff"
+            android:textColor="@color/colorText"
             android:textSize="14sp"
             android:text="AQI指数"/>
 
@@ -61,7 +63,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textColor="#fff"
+            android:textColor="@color/colorText"
             android:textSize="14sp"
             android:text="PM2.5指数"/>
 

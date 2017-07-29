@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.xujia.fishweather.gson.Forecast;
 import com.example.xujia.fishweather.gson.Weather;
+import com.example.xujia.fishweather.utils.CalendarUtils;
 import com.example.xujia.fishweather.utils.HttpUtil;
 import com.example.xujia.fishweather.utils.Utility;
 
@@ -91,8 +92,13 @@ public class WeatherActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call call, IOException e) {
-                Toast.makeText(WeatherActivity.this, "获取天气信息失败！", Toast.LENGTH_SHORT).show();
                 refresh.setRefreshing(false);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(WeatherActivity.this, "获取天气信息失败！", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
@@ -120,8 +126,6 @@ public class WeatherActivity extends AppCompatActivity {
 
     private void showWeatherInfo(Weather weather) {
 
-        //Log.d("Info",weather.toString());
-
         if (weather.basic != null) {
             String cityName = weather.basic.cityName;
             String updateTime = weather.basic.update.updateTime.split(" ")[1];
@@ -142,11 +146,24 @@ public class WeatherActivity extends AppCompatActivity {
             for (Forecast forecast : weather.forecastList) {
                 View v = LayoutInflater.from(this).inflate(R.layout.forecast_item, forecastLayout, false);
                 TextView date = (TextView) v.findViewById(R.id.forecast_item_date);
+                ImageView weatherIcon = (ImageView) v.findViewById(R.id.weather_icon);
                 TextView info = (TextView) v.findViewById(R.id.forecast_item_info);
                 TextView maxTmp = (TextView) v.findViewById(R.id.forecast_item_tmp_max);
                 TextView minTmp = (TextView) v.findViewById(R.id.forecast_item_tmp_min);
 
-                date.setText(forecast.date);
+                String currentDate = CalendarUtils.getCurrentDateShort();
+                if (currentDate != null && currentDate.equals(forecast.date)) {
+                    date.setText("今天");
+                } else if (currentDate != null && CalendarUtils.getDays(forecast.date,currentDate) == 1) {
+                    date.setText("明天");
+                } else if (currentDate != null && CalendarUtils.getDays(forecast.date,currentDate) == 2) {
+                    date.setText("后天");
+                } else {
+                    String dayOfWeek = CalendarUtils.getWeekOfDate(forecast.date);
+                    date.setText(dayOfWeek);
+                }
+                int ResId = Utility.selectWeatherIcon(forecast.more.txt_d);
+                Glide.with(getApplication()).load(ResId).into(weatherIcon);
                 info.setText(forecast.more.txt_d+"");
                 maxTmp.setText(forecast.temperature.max+"");
                 minTmp.setText(forecast.temperature.min+"");
@@ -165,6 +182,9 @@ public class WeatherActivity extends AppCompatActivity {
             suggestionCarWash.setText("洗车指数：" + weather.suggestion.carWish.txt);
             suggestionSport.setText("运动建议：" + weather.suggestion.sport.txt);
         }
+
+        Intent intent = new Intent(this,AutoUpdateService.class);
+        startService(intent);
 
     }
 
@@ -188,6 +208,9 @@ public class WeatherActivity extends AppCompatActivity {
         bingPic = (ImageView) findViewById(R.id.back_image);
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         String loadPicture = pref.getString("bingPic",null);
+
+        Glide.with(this).load(R.drawable.default_background).into(bingPic);
+
         if (loadPicture != null){
             Glide.with(this).load(loadPicture).into(bingPic);
         } else {
@@ -222,6 +245,12 @@ public class WeatherActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call call, IOException e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Glide.with(getApplication()).load(R.drawable.default_background).into(bingPic);
+                    }
+                });
                 e.printStackTrace();
             }
 

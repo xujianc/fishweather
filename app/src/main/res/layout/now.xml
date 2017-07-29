@@ -11,7 +11,7 @@
         android:layout_gravity="end"
         android:layout_marginEnd="5dp"
         android:hint="N/A"
-        android:textColor="#fff"
+        android:textColor="@color/colorText"
         android:textSize="52sp" />
 
     <TextView
@@ -22,8 +22,8 @@
         android:layout_marginStart="10dp"
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="10dp"
-        android:textColor="#fff"
-        android:textSize="24sp"
+        android:textColor="@color/colorText"
+        android:textSize="22sp"
         android:hint="晴"/>
 
 </LinearLayout>
