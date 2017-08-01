@@ -22,7 +22,15 @@ import org.json.JSONObject;
 
 public class Utility  {
     /**
-     * KEY:和风天气的API
+     * 获取Bing每日一图
+     * 这两个API接口可以直接把它当做一个链接来用，插入如下代码：
+     * <img src="http://api.dujin.org/bing/1366.php" alt="Bing每日图片" />
+     * <img src="http://api.dujin.org/bing/1920.php" alt="Bing每日图片超高清" />
+     */
+
+
+    /**
+     * KEY:和风天气的API KEY
      */
     public static final String KEY = "bc0418b57b2d4918819d3974ac1285d9";
 
@@ -126,7 +134,7 @@ public class Utility  {
 
     /**
      * 根据天气信息选择天气图标
-     * @param weatherInfo  天气信息
+     * @param text  天气信息
      */
     public static int selectWeatherIcon(String text) {
         //default ResId is icon N/A

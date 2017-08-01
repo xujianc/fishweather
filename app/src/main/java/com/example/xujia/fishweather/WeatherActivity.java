@@ -92,7 +92,9 @@ public class WeatherActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call call, IOException e) {
+
                 refresh.setRefreshing(false);
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -116,6 +118,33 @@ public class WeatherActivity extends AppCompatActivity {
                             editor.apply();
                             showWeatherInfo(weather);
                             refresh.setRefreshing(false);
+                        } else {
+                            refresh.setRefreshing(false);
+                            switch (weather.status){
+                                case "invalid key":
+                                    Toast.makeText(WeatherActivity.this, "错误的key", Toast.LENGTH_SHORT).show();
+                                    break;
+                                case "unknown city":
+                                    Toast.makeText(WeatherActivity.this, "未知或错误城市", Toast.LENGTH_SHORT).show();
+                                    break;
+                                case "no more requests":
+                                    Toast.makeText(WeatherActivity.this, "超过访问次数", Toast.LENGTH_SHORT).show();
+                                    break;
+                                case "param invalid":
+                                    Toast.makeText(WeatherActivity.this, "参数错误", Toast.LENGTH_SHORT).show();
+                                    break;
+                                case "too fast":
+                                    Toast.makeText(WeatherActivity.this, "超过限定的QPM", Toast.LENGTH_SHORT).show();
+                                    break;
+                                case "anr":
+                                    Toast.makeText(WeatherActivity.this, "无响应或超时", Toast.LENGTH_SHORT).show();
+                                    break;
+                                case "permission denied":
+                                    Toast.makeText(WeatherActivity.this, "无访问权限", Toast.LENGTH_SHORT).show();
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
                     }
                 });
